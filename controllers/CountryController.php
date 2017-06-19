@@ -125,5 +125,6 @@ class CountryController extends Controller
     public function actionDate()
     {
     	return $this->render('date');
+
     }
 }
