@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use yii\db\ActiveRecord;
+use phpDocumentor\Reflection\Types\Self_;
 
 class User extends \yii\base\Object implements \yii\web\IdentityInterface
 {
@@ -9,6 +11,8 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public $password;
     public $authKey;
     public $accessToken;
+    const SCENARIO_LOGIN = 'login';
+    const SCENARIO_REGISTER = 'register';
 
     private static $users = [
         '100' => [
@@ -100,5 +104,14 @@ class User extends \yii\base\Object implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === $password;
+    }
+    
+    //场景特性
+    public function scenarios()
+    {
+    	$scenarios = parent::scenarios();
+    	$scenarios[self::SCENARIO_LOGIN] = ['username', 'password'];
+    	$scenarios[self::SCENARIO_REGISTER] = ['username', 'email', 'password'];
+    	return $scenarios;
     }
 }
