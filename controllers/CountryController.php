@@ -122,7 +122,9 @@ class CountryController extends Controller
         }
     }
     
-    public function actionDate(){
-        return 'The current time is '. date('Y-m-d H:i:s');
+    public function actionDate()
+    {
+    	return $this->render('date');
+
     }
 }
