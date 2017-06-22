@@ -31,4 +31,48 @@ class DateController extends Controller
 	 	echo Url::previous() . '<br>';  
 	 	
 	}
+	
+	public function actionRequest($id=1, $name2 = 'bao')
+	{
+		$request = \Yii::$app->request;
+
+		$get = $request->get();  //获取GET请求的所有参数
+		$post = $request->post(); //获取POST请求的所有参数
+		$id = $request->get('id', 1);  //$id = isset($_GET['id']) ? $_GET['id'] : 1;
+		$name1 = $request->post('name');  //$name1 = isset($_POST['name']) ? $_POST['name'] : null;
+		$name2 = $request->post('name', 'cindy');  // $name2 = isset($_POST['name']) ? $_POST['name'] : 'cindy';
+		
+		$params = $request->bodyParams;  // 获取 除GET POST 请求之外的其他诸如PUT PATCH之类的请求 过来的参数
+		$param = $request->getBodyParam('id', 1);		
+
+		$headers = \Yii::$app->request->headers;  //获取Http头信息
+// 		$accept = $headers->get('Accept');
+// 		if ($headers->has('User-Agent')){
+			
+// 			return json_encode($headers);
+// 		}
+
+		//客户端信息
+		$userHost = \Yii::$app->request->userHost;
+		$userIp = \Yii::$app->request->userIP;
+		
+		return $userHost . $userIp;
+	}
+	
+	public function actionJudgeRequestMethod()
+	{
+		$request = \Yii::$app->request;
+		//判断请求方法
+		if ($request->isAjax){
+			return 'ajax';
+		}elseif ($request->isGet){
+			return 'get';
+		}elseif ($request->isPost){
+			return 'post';
+		}elseif ($request->isPut){
+			return 'put';
+		}elseif ($request->isPatch){
+			return 'patch';
+		}
+	}
 }
