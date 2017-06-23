@@ -149,5 +149,107 @@ class DateController extends Controller
 	{
 		\Yii::$app->response->sendFile('/Users/admin/Sites/log/pay_error_log.log')->send();
 	}
+	
+	//sessions
+	public function actionSessions()
+	{
+		$session = \Yii::$app->session;
+		if ($session->isActive){ //检查session是否开启
+			
+		}else {
+			$session->open();
+		}
+		
+		$session->close();
+		$session->destroy();  //销毁session中所有已注册的数据
+		
+		//访问session数据
+		//获取session中的变量值
+		$language = $session->get('language');
+		$language = $session['language'];
+		$language = isset($_SESSION['language']) ? $_SESSION['language'] : null;
+		
+		//设置一个session变量
+		$session->set('language', 'en-US');
+		$session['language'] = 'en-US';
+		$_SESSION['language'] = 'en-US';
+		
+		//删除一个session变量
+		$session->remove('language');
+		unset($session['language']);
+		unset($_SESSION['language']);
+		
+		//检查session变量是否已存在
+		if ($session->has('language')){}
+		if (isset($session['language'])){}
+		if (isset($_SESSION['language'])){}
+		
+		//遍历所有session变量
+		foreach ($session as $name => $value){}
+		foreach ($_SESSION as $name => $value){}
+		
+	}
+	
+	public function actionSessionarray()
+	{
+		$session = \Yii::$app->session;
+		$session['captcha'] = new \ArrayObject();
+		$session['captcha']['number'] = 5;
+		$session['captcha']['lifetime'] = 3600;
+		return $session['captcha']['lifetime'];
+	}
+	
+	public function actionFlash()
+	{
+		$session = \Yii::$app->session;
+		$session->setFlash('postDeleted', 'You have successfully deleted your post.');
+		echo $session->getFlash('postDeleted');
+	}
+	
+	public function actionGetflash()
+	{
+		return \Yii::$app->session->hasFlash('postDeleted');
+	}
+	
+	public function actionAddflash()
+	{
+		$session = \Yii::$app->session;
+		$session->addFlash('alerts', 'You have successfully deleted your post.');
+		$session->addFlash('alerts', 'You have successfully add a new friend.');
+		$session->addFlash('alerts', 'You are promoted');
+		$alerts = $session->getFlash('alerts');
+		return json_encode($alerts);
+	}
+	
+	public function actionCookie()
+	{
+		$cookies = \Yii::$app->request->cookies;
+		// 获取名为 "language" cookie 的值，如果不存在，返回默认值"en"
+		$language = $cookies->getValue('language', 'en');
+		
+		// 另一种方式获取名为 "language" cookie 的值
+		if (($cookie = $cookies->get('language')) !== null){
+			$language = $cookie->value;
+		}
+		
+		// 可将 $cookies当作数组使用
+		if (isset($cookies['language'])){
+			$language = $cookies['language']->value;
+		}
+		
+		// 判断是否存在名为"language" 的 cookie
+		if ($cookies->has('language')){}
+		if (isset($cookies['language'])){}
+		
+		// 在要发送的响应中添加一个新的cookie
+		$cookies->add(new \yii\web\Cookie([
+				'name'	=> 'language',
+				'value'	=> 'zh-CN',
+		]));
+		
+		//// 删除一个cookie
+		$cookies->remove('language');
+		unset($cookies['language']);
+	}
 
 }
