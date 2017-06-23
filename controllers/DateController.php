@@ -75,4 +75,79 @@ class DateController extends Controller
 			return 'patch';
 		}
 	}
+	
+	public function actionResponse()
+	{
+		\Yii::$app->response->statusCode = 200;  //状态码的设置
+		
+		try {
+			
+		}catch (Exception $e){
+			throw new \yii\web\NotFoundHttpException();
+		}
+		
+		//exception
+// 		\yii\web\BadRequestHttpException;
+// 		\yii\web\NotFoundHttpException;
+// 		\yii\web\NotAcceptableHttpException;
+		
+		//Http头部
+		$headers = \Yii::$app->response->headers;
+		$headers->add('pragma', 'no-cache');  // 增加一个 Pragma 头，已存在的Pragma 头不会被覆盖。
+		$headers->set('pragma', 'no-cache');  // 增加一个 Pragma 头，任何已存在的Pragma 头 都会被丢弃。
+		$headers->remove('pragma');  // 删除 Pragma 头，并返回删除的Pragma 头的值到数组。
+		
+		// 响应主体
+		\Yii::$app->response->content = 'Hello World';
+		//format data属性
+		$reponse = \Yii::$app->response;
+		$reponse->format = \yii\web\Response::FORMAT_JSON;
+		$reponse->data =['message' => 'Hello World!'];
+	}
+	
+	public function actionTest()
+	{
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		return [
+				'message' => 'Hello World',
+				'code'	=> '100',
+		];
+	
+	}
+	
+	public function actionInfo()
+	{
+		return \Yii::createObject([
+				'class'		=> 'yii\web\Response',
+				'format'	=> \yii\web\Response::FORMAT_JSON,
+				'data'		=> [
+						'message'	=> 'Hello World, Hello My Honey',
+						'code'		=> '100',
+				],
+		]);
+	}
+	
+	
+	//注意 Redirect 与 Redirects 作用相同
+	public function actionRedirect()
+	{
+		return $this->redirect('http://study.yii.com/index.php/country/');
+	}
+	
+	public function actionRedirects()
+	{
+		\Yii::$app->response->redirect('http://study.yii.com/index.php/country/')->send();
+	}
+	
+	// download downloads 作用相同  \yii\web\Response::send();方法的作用是 确保没有其他内容追加到响应中
+	public function actionDownload()
+	{
+		\Yii::$app->response->sendFile('/tmp/channel.csv');  
+	}
+	
+	public function actionDownloads()
+	{
+		\Yii::$app->response->sendFile('/Users/admin/Sites/log/pay_error_log.log')->send();
+	}
+
 }
