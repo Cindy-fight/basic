@@ -126,4 +126,11 @@ class CountryController extends Controller
     {
     	return $this->render('date');
     }
+    
+    public function actionDeleted($id)
+    {
+    	$this->findModel($id)->delete();
+    
+    	return $this->redirect(['index']);
+    }
 }
