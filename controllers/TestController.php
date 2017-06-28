@@ -310,6 +310,48 @@ class TestController extends Controller
 		$orders1 = Orders::find()->innerJoinWith('books')->all();
 	}
 	
+	public function actionDisplaydata()
+	{
+		$formatter = \Yii::$app->formatter;
+		echo $formatter->asDate('2017-06-28', 'long');
+		echo '<br>';
+		echo $formatter->asPercent(0.125, 2);
+		echo '<br>';
+		echo $formatter->asEmail('ting.wang@maimob.cn');
+		echo '<br>';
+		echo $formatter->asBoolean(true);
+		echo '<br>';
+		echo $formatter->asDate(null);
+		echo '<br>';
+		echo \Yii::$app->formatter->format('2014-01-10', 'date');
+		echo '<br>';
+		echo \Yii::$app->formatter->asDate('now', 'yyyy-MM-dd');
+		echo '<br>';
+		echo \Yii::$app->formatter->asDate('now', 'php:Y-m-d');
+		echo '<br>';
+		echo \Yii::$app->formatter->asDatetime('now');
+		echo '<br>';
+		echo \Yii::$app->formatter->asTime('now');  //时间显示有问题
+		echo '<br>';
+		echo \Yii::$app->formatter->asTimestamp('now');
+		echo '<br>';
+		echo \Yii::$app->formatter->asTime('1498641745');
+		echo '<br>';
+		echo \Yii::$app->formatter->asTime('2014-10-04 14:41:23 CEST');
+		echo '<br>';
+		//本地日期格式化(没看出有什么区别)
+		\Yii::$app->formatter->locale = 'en-US';
+		echo \Yii::$app->formatter->asDatetime('now');
+		echo '<br>';
+		\Yii::$app->formatter->locale = 'de-DE';
+		echo \Yii::$app->formatter->asDatetime('now');
+		echo '<br>';
+		\Yii::$app->formatter->locale = 'ru-RU';
+		echo \Yii::$app->formatter->asDatetime('now');
+		echo '<br>';
+		echo \Yii::$app->formatter->asDate('now');
+	}
+	
 	
 }
 
