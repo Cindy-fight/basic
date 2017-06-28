@@ -4,6 +4,9 @@ namespace app\controllers;
 
 use yii\web\Controller;
 use yii\db\Query;
+use app\models\Customer;
+use yii\web\NotFoundHttpException;
+use app\models\Orders;
 
 class TestController extends Controller
 {
@@ -227,6 +230,84 @@ class TestController extends Controller
 			
 		}
 		
+	}
+	
+	public function actionAR(){
+		
+		//查询数据
+		$customers = Customer::find()
+		->where(['status' => Customer::STATUS_ACTIVE])
+		->orderBy('id')
+		->all();
+		
+		$customer = Customer::find()->where(['id' => 1])->one();
+		
+		$count = Customer::find()->where(['status' => Customer::STATUS_ACTIVE])->count();
+		
+		$customer1 = Customer::find()->indexBy('id')->all();
+		
+		$sql = "SELECT * FROM customer";
+		$customer2 = Customer::findBySql($sql)->all();
+		
+		$customer3 = Customer::findOne(1);
+		
+		$customer4 = Customer::findOne(['id'=>1, 'status' => Customer::STATUS_ACTIVE,]);
+		
+		$customer5 = Customer::findAll([1,2,3]);
+		
+		$customer6 = Customer::findAll(['status' => Customer::STATUS_ACTIVE]);
+		
+		//以数组形式获取数据
+		$customer7 = Customer::find()->asArray()->all();
+		
+		//批量获取数据
+		foreach (Customer::find()->batch(10) as $customer8){ //一次提取10个客户信息
+			
+		}
+		
+		foreach (Customer::find()->each(10) as $customer9){  //一次提取10个客户并一个一个的遍历处理
+			
+		}
+		
+		foreach (Customer::find()->with('orders')->each() as $customer10){  //贪婪加载模式的批处理查询
+			
+		}
+		
+		//操作数据
+		$customerModel = new Customer();
+		$customerModel->name = 'Cindy';
+		$customerModel->email = 'cindy@163.com';
+		$customerModel->save();
+		
+		$customer11 = Customer::findOne($id);
+		$customer11->email = 'baobao@163.com';
+		$customer11->save();
+		
+		$customer12 = Customer::findOne($id);
+		$customer12->delete();
+		
+		Customer::deleteAll('age > :age AND gender = :gender', [':age' => 20, ':gender' => 'M']);
+		
+		Customer::updateAllCounters(['age' => 1]);  //所有客户的age（年龄）字段加1：
+		
+		//数据输入与有效性验证
+		$customerModel = new Customer();
+		if ($customerModel->load(\Yii::$app->request->post()) && $customerModel->save()){}
+		
+		if ($customerModel === null){
+			throw new NotFoundHttpException();
+		}
+		
+		//读取默认值
+		$customerModel->loadDefaultValues();
+		
+		//逆关系
+	    \yii\db\ActiveQuery::inverseOf();
+	    
+	    //join类型关联查询
+		$orders = Orders::find()->joinWith('customer')->orderBy('customer.id, order.id')->all();
+		
+		$orders1 = Orders::find()->innerJoinWith('books')->all();
 	}
 	
 	
