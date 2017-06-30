@@ -352,6 +352,29 @@ class TestController extends Controller
 		echo \Yii::$app->formatter->asDate('now');
 	}
 	
+	public function actionSpecial()
+	{
+		echo \Yii::t('app', 'Today is {0, date}', time());
+		echo '<br/>';
+		echo \Yii::t('app', 'Today is {0,date,short}', time());
+		echo '<br>';
+		echo \Yii::t('app', 'It is {0, time}',time());
+	}
+	
+	public function actionSendemail()
+	{
+		$email = \Yii::$app->mailer->compose('email')
+		->setFrom('ting.wang@maimob.cn')
+		->setTo('592557247@qq.com')
+		->setSubject('Message Subject')
+		->send();
+		if ($email){
+			return 'success';
+		}else {
+			return 'fail';
+		}
+	}
+	
 	
 }
 
